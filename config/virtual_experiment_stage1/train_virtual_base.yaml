@@ -1,0 +1,98 @@
+datamodule:
+  h5_path: /home/xuehan/UniFolding/data/vr_imitation_flattening-folding-long_v5_dataset/Tshirt/data.h5
+  intrinsic_name: camera_intrinsic_scanner_v2.json
+  batch_size: 32
+  num_workers: 8
+  # hyper-params
+  num_pc_sample: 20000
+  num_pc_sample_final: 4000
+  num_rotations: 10
+  sigma: 0.025
+  delta_coverage_as_reward: True
+  use_tanh_reward: True
+  reward_alpha: 2.0
+  reward_beta: 1.0
+  voxel_size: 0.002
+  # augmentation
+  use_augmentation: True
+  normal_aug_types: [depth, affine]
+  fold_aug_types: [depth, affine]
+  fling_aug_types: [depth, flip, affine, random_permute]
+  depth_scale_range: [0.1, 1.0]
+  max_depth_offset: 0.03
+  max_normal_rot_angle: 20
+  max_fold_rot_angle: 20
+  max_fling_rot_angle: 180
+  # dataset
+  primitive_classes: [fling, drag, fold1, fold2, pick_and_place, done]
+  primitive_idxs: [0, 1, 2, 3, 4, 5]
+  # datamodule config
+  dataset_split: [8,1,1]
+  split_seed: 0
+
+model:
+  sparse_unet3d_encoder_params:
+    in_channels: 3
+    out_channels: 64
+    conv1_kernel_size: 5
+    normalize_feature: True
+    CHANNELS: [None, 64, 64, 128, 256]
+    TR_CHANNELS: [None, 64, 64, 64, 128]
+  transformer_params:
+    input_channels: 3
+    use_xyz: True
+    input_size: 4000
+    d_model: 64
+    num_layers: 2
+    num_heads: 1
+    key_feature_dim: 64
+    with_pos_embed: True
+    encoder_pos_embed_input_dim: 3
+    fea_channels: [64, 128, 128]
+  action_head_params:
+    global_nn_channels: [128, 256, 1024]
+    cls_base_nn_channels: [1024, 256, 128]
+    pointnet_channels: [3, 64, 128, 512]
+    grasp_nocs_feat_nn_channels: [1728, 512, 256]
+    grasp_nocs_score_nn_channels: [256, 128, 4]
+    grasp_nocs_att_nn_channels: [256, 128, 4]
+    grasp_nocs_offset_nn_channels: [256, 128, 12]
+    offset_nn_channels: [128, 256, 128, 8]
+    att_nn_channels: [128, 256, 128, 4]
+    nocs_nn_channels: [128, 256, 128, 3]
+    num_smoothing_actions: 3   # (fling, drag, pick_and_place)
+    num_folding_actions: 4  # short: (drag, fold1, fold2, done)
+    num_action_type: 5  # long: (fling, drag, fold1, fold2, pick_and_place)
+    min_gt_nocs_ratio: 0.7
+    gt_nocs_ratio_decay_factor: 0.98
+    num_pred_fling_candidates: 8
+    use_xyz_variety_loss: True
+    use_gt_nocs_pred_for_distance_weight: True
+    nocs_distance_weight_alpha: 50.0
+  virtual_reward_head_params:
+      fuse_nn_channels: [524, 256, 128]
+      canonicalization_nn_channels: [128, 128, 1]
+      alignment_nn_channels: [128, 128, 1]
+      use_dense_feat: True
+      use_nocs_dense_feat: True
+      xyz_distance_weight_alpha: 50.0
+      deformable_weight: 0.7
+  num_rotations: 10
+  smoothing_cls_weight: [1.0, 1.0, 4.0]
+  folding_cls_weight: [4.0, 1.0, 1.0, 1.0]
+  primitive_classes: [fling, drag, fold1, fold2, pick_and_place, done]
+  smoothing_primitive_idxs: [0, 1, 4]
+  folding_primitive_idxs: [1, 2, 3, 5]
+  ignore_folding_cls: True
+  loss_cls_weight: 0.1
+  loss_grasp_weight: 100.0
+  loss_nocs_weight: 100.0
+  loss_offset_weight: 10.0
+  use_cos_lr: True
+  cos_t_max: 200
+trainer:
+  max_epochs: 200
+logger:
+  experiment_name: Tshirt-long-stage1
+  run_name: debug
+  tracking_uri: https://unifold.mlflow.robotflow.ai/

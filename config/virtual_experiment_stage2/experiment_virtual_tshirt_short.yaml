@@ -1,0 +1,27 @@
+defaults:
+  - experiment_virtual_base
+  - _self_
+
+experiment:
+  compat:
+    garment_type: 'tshirt_short'
+  environment:
+    random_fold_type: 'tshirt_short'
+    stretch_max_distance: 1.0
+  obj_loader:
+    sub_categories: [1]  # short
+    instance_filter_file_path: /home/hanxue/data/UniFolding/VR_Imitation/vr_imitation_flattening-folding-short_v6_dataset/Tshirt/train_instances.txt
+  strategy:
+    instance_num_per_episode_per_proc: 300
+    warmup_sample_num: 600
+  runtime_training_config_override:
+    datamodule:
+      h5_path: /home/hanxue/data/UniFolding/VR_Imitation/vr_imitation_flattening-folding-short_v6_dataset/Tshirt/data.h5
+    runtime_datamodule:
+      weighted_sampler:
+        max_sample_num: 3000
+    logger:
+      experiment_name: Tshirt-short-action14-dataset-v6_hybrid
+
+logging:
+  tag: tshirt-short-stage2_virtual

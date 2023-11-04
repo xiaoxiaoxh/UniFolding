@@ -1,0 +1,9 @@
+defaults:
+  - train_virtual_base
+  - _self_
+
+datamodule:
+  h5_path: /home/xuehan/UniFolding/data/vr_imitation_flattening-folding-long_v5_dataset/Tshirt/data.h5
+
+logger:
+  experiment_name: Tshirt-long-stage1

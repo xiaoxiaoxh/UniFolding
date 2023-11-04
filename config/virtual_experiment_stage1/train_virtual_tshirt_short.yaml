@@ -1,0 +1,9 @@
+defaults:
+  - train_virtual_base
+  - _self_
+
+datamodule:
+  h5_path: /ssd0/data/VR_Imitation/vr_imitation_flattening-folding-short_v6_dataset/Tshirt/data.h5
+
+logger:
+  experiment_name: Tshirt-short-stage1

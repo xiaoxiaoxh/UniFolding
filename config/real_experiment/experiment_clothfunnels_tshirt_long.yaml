@@ -1,0 +1,24 @@
+defaults:
+  - experiment_real_tshirt_long
+  - _self_
+
+experiment:
+  compat:
+    camera:
+      # for file camera only
+      target_dir: '/home/xuehan/UniFolding/log/experiment_real/tshirt_long_clothfunnels'
+    machine:
+      table_limits_low: [0.2, -0.8, 0]
+      table_limits_high: [1.02, 0.8, 0.3]
+      robot_safe_range: [0.17, 0.87]
+  strategy:
+    instance_num_per_episode: 10
+    trial_num_per_instance: 10
+
+logging:
+  tag: tshirt_long_clothfunnels
+
+inference:
+  model_path: "/home/xuehan/cloth-funnels/models/longsleeve_canonicalized_alignment.pth"
+  keypoint_model_path: "/home/xuehan/cloth-funnels/models/keypoint_model.ckpt"
+  model_version: v1

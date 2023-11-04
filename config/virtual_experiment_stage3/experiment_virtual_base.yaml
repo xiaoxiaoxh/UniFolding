@@ -1,0 +1,35 @@
+defaults:
+  - ../virtual_experiment_stage2/experiment_virtual_base_v3@_here_
+  - _self_
+
+experiment:
+  compat:
+    calibration_path: /home/xuehan/UniFolding/data/calibration/v17
+    camera:
+      virtual_camera_intrinsics_path: /home/xuehan/UniFolding/data/calibration/v17/camera_intrinsic_scanner.json
+  environment:
+#    executable_file: '@editor'
+    executable_file: '/home/xuehan/UnityProjects/garmentimitationrfu/Build/ClothDynamics.x86_64'
+    time_scale: 3.0
+  obj_loader:
+    data_root: /home/xuehan/Data/CLOTH3D/train
+    sub_category_json_path: /home/xuehan/Data/CLOTH3D/train_meta/Tshirt_sub_categories_v3.json
+    meta_json_path: /home/xuehan/Data/CLOTH3D/train_meta/Tshirt_meta.json
+    use_wsl: False
+  strategy:
+    trial_num_per_instance: 4
+    step_num_per_trial: 8
+    episode_num: 1
+    skip_all_model_training: True  # skip model training, only perform data collection
+    random_exploration:
+      random_explore_top_ratio: 0.3  # the top-k ratio in random exploration (only choose from the best points)
+    random_fold_config:
+      random_fold_data_ratio: 0.2
+      best_action_ratio: 0.
+    barrier:
+      enable: True  # Set to true will enable barrier to synchronize with other processes
+      num_processes: 2
+      tag: stage3
+
+logging:
+  path: "/home/xuehan/UniFolding/log"

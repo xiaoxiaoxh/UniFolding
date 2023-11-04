@@ -1,0 +1,19 @@
+defaults:
+  - experiment_real_base
+  - _self_
+
+experiment:
+  compat:
+    garment_type: 'tshirt_long'
+    machine:
+      hybrid_drag:
+        x_distance_ratio: 0.5 # for long-sleeve
+        y_distance_ratio: 0.15  # for long-sleeve
+  runtime_training_config_override:
+    virtual_datamodule:  # datamodule for virtual dataset used for self-supervised learning
+      tag: 'long_action14_8pts_real-hybrid'  # for long-sleeve hybrid-training
+    logger:
+      experiment_name: Tshirt-long-action14-dataset-v5_real
+
+logging:
+  tag: tshirt-long-stage3_real

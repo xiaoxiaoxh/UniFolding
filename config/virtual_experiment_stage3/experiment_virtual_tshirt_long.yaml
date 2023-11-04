@@ -1,0 +1,17 @@
+defaults:
+  - experiment_virtual_base
+  - _self_
+
+experiment:
+  compat:
+    garment_type: 'tshirt_long'
+  environment:
+    random_fold_type: 'tshirt_long'
+    stretch_max_distance: 1.2
+  obj_loader:
+    sub_categories: [2]  # long
+  strategy:
+    instance_num_per_episode_per_proc: 400
+
+logging:
+  tag: tshirt-long-stage3_virtual

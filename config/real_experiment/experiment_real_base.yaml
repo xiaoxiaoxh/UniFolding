@@ -1,0 +1,162 @@
+defaults:
+  - ../base/inference@_here_
+  - _self_
+
+experiment:
+  compat:
+    use_real_robots: true # True by default
+    debug: false
+    calibration_path: '/home/xuehan/UniFolding/data/calibration/v23'
+    only_capture_pcd_before_action: false  # False by default
+    garment_type: 'tshirt_long'
+    seed: 41234
+    camera:
+      vis: False
+      use_file_camera: False  # False by default
+      # for file camera only
+      target_dir: '/home/xuehan/UniFolding/log/captures/tshirt_long_canonical_corl'
+      dev_id: '2020-12-039-LC3'
+      plane_point_uvs: [[167, 33], [557, 36], [162, 650], [553, 655]]  # the uv coordinates of the sample points for calculating table plane depth (720*720)
+      external_calibration_path: '/home/xuehan/UniFolding/data/calibration/v23/external_camera_calibration.txt'
+      max_mask_area_ratio: 0.6
+    segmentation:
+      grounding_dino_config_path: "/home/xuehan/UniFolding/data/checkpoints/GroundingDINO_SwinT_OGC.cfg.py"
+      grounding_dino_checkpoint_path: "/home/xuehan/UniFolding/data/checkpoints/groundingdino_swint_ogc.pth"
+      sam_encoder_version: "vit_b"
+      sam_checkpoint_path: "/home/xuehan/UniFolding/data/checkpoints/sam_vit_b_01ec64.pth"
+      classes: ["cloth"]
+      box_threshold: 0.25
+      text_threshold: 0.25
+      nms_threshold: 0.8
+    machine:
+      x_lim_m: [0.2, 1.02]  # table limits
+      y_lim_m: [-0.78, 0.86]  # table limits
+      z_lim_m: [0.00, 0.3]  # table limits
+      safe_distance_m: 0.15  # min distance between two robot grasping points
+      safe_y_distance_cm: 0.0
+      left_workspace_min_x: 0.15
+      right_workspace_min_x: 0.15
+      left_workspace_y_limits: [-0.4, 0.8]
+      right_workspace_y_limits: [-0.8, 0.4]
+      left_workspace: [0.17, 0.9]  # distance limits for left robot
+      right_workspace: [0.17, 0.9]  # distance limits for right robot
+      image_width_ratio_limits_for_reachability_det: [0.3, 0.7]  # the limits for ratio of image width for grasp failure detection
+      normal_drag:
+        line_ratio: 0.6  # the length ratio of pick point on the critical line
+        min_x_after_drag: 0.28
+        min_robot_distance_for_drag: 0.3
+        y_limits_before_drag: [-0.4, 0.4]
+      hybrid_drag:
+        x_distance_ratio: 0.5 # for long-sleeve
+        y_distance_ratio: 0.15  # for long-sleeve
+        min_x_after_drag: 0.27
+        y_tolerance: 0.1
+  environment:
+    project_root: "/home/xuehan/UniFolding"
+  strategy:
+    skip_all_errors: True # True by default
+    start_episode: 0  # 0 by default
+    episode_num: 1
+    instance_num_per_episode: 20
+    trial_num_per_instance: 8  # 8 for training
+    step_num_per_trial: 10
+    skip_data_collection_in_first_episode: False  # False by default
+    warmup_sample_num: 300
+    use_online_dataset: True # Set to True will use only online data from recent episodes
+    max_memory_size: 100
+    finalize_training: True  # True by default, whether to perform finalize_training function after training
+    demo_mode: False  # False by default, whether to skip the remaining trails if action_type is Done
+    random_exploration:
+      enable: False  # False by default, only used for data collection and training
+      random_explore_prob: 0.05  # the probability for random exploration during data collection
+      random_explore_top_ratio: 0.2  # the top-k ratio in random exploration (only choose from the best points)
+    random_lift_in_each_trial: True  # True by default
+    check_grasp_failure_before_action: True  # True by default
+    fixed_garment_id: null  # for debugging
+    barrier:
+      enable: True  # Set to true will enable barrier to synchronize with other processes
+      num_processes: 2
+      tag: stage3
+  runtime_training_config_override:
+    virtual_datamodule:  # datamodule for virtual dataset used for self-supervised learning
+      debug: False
+      batch_size: 8
+      num_workers: 4
+      tag: 'long_action14_8pts_real-hybrid'  # for long-sleeve hybrid-training
+      episode_range: [ 0, 15]  # this will take effects only if use_online_dataset
+      weighted_sampler:
+        enable: True
+        mode: 'linear'
+        min_weight: 0.05
+        max_sample_num: 2000
+      # data augmentation
+      use_augmentation: True
+      fling_aug_types: [ depth, affine, random_permute ]
+      max_fling_rot_angle: 20
+      # For ClothDynamics environment
+      depth_scale_range: [ 0.5, 1.5 ]
+      # database config
+      use_database: True
+      log_api: "/v1/log_stream"
+      log_endpoint: "http://100.100.100.105:8080"
+    runtime_datamodule:
+      debug: False
+      batch_size: 8
+      num_workers: 4
+      episode_range: [ 0, 100]
+      # data augmentation
+      use_augmentation: True
+      normal_aug_types: [ depth, affine ]
+      fling_aug_types: [ depth, flip, affine, random_permute ]
+      label_smoothing_value: 0.15
+      max_normal_rot_angle: 20
+      max_fling_rot_angle: 25
+      # For real-data
+      depth_scale_range: [ 0.8, 1.2 ]
+      # datamodule config
+      dataset_split: [ 9, 1, 0]
+      split_seed: 0
+      weighted_sampler:
+        enable: True
+        mode: 'linear'
+        min_weight: 0.2
+        max_sample_num: 200
+      num_rankings_per_sample: 44  # 28 + 16 (pairs)
+      # database config
+      use_database: True
+      log_api: "/v1/log_stream"
+      log_endpoint: "http://100.100.100.105:8080"
+    trainer:
+      max_epochs: 30
+      gradient_clip_val: 5.0
+      detect_anomaly: False
+    model:
+      freeze_backbone_for_real_world_finetune: False
+      freeze_reward_mlp_for_real_world_finetune: False
+      enable_real_world_finetune: True
+      virtual_reward_head_params:
+        deformable_weight_nn_channels: [128, 128, 1]
+        xyz_distance_weight_alpha: 50.0
+        deformable_weight: 0.7
+        use_dynamic_deformable_weight: True
+        enable_reward_normalization: True
+      cos_t_max: 30
+      loss_cls_weight: 0.05
+      loss_grasp_weight: 100.0
+      loss_offset_weight: 10.0
+      loss_ranking_weight: 0.2
+      loss_nocs_weight: 100.0
+      loss_canonicalization_reward_weight: 20.0
+      loss_alignment_reward_weight: 4.0
+      virtual_grasp_loss_weight_factor: 0.
+      virtual_nocs_loss_weight_factor: 0.5
+    logger:
+      experiment_name: Tshirt-long-action14-dataset-v5_real
+  planning: null
+
+logging:
+  namespace: experiment_real
+  tag: "debug"
+  note: deformabale-weight-dynamic-bn
+  path: "/home/xuehan/UniFolding/log"
+
