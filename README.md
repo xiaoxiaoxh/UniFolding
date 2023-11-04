@@ -20,7 +20,7 @@ This section describes how to setup neccessary environments for this project.
 
 ### 🧠 Learning Environment
 
-The learning code should work on environments that meet the following requirements
+The learning code should work on environments that meet the following requirements:
 
 - Modern Linux Distributions that are not in EOL.
 - Python >= 3.8
