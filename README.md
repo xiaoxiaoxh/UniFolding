@@ -54,6 +54,7 @@ The simulation environment depends on [RFUniverse](https://github.com/mvig-robot
 
 [CLOTH3D](https://github.com/hbertiche/CLOTH3D) dataset is used in our simulation. You can download it from [here](https://chalearnlap.cvc.uab.cat/dataset/38/description/).
 
+TODO: The code for VR recording system and the Unity project for self-supervised learning will be released in about one or two weeks!
 ### 📷🦾🗒 Real Environment
 
 #### 📷Camera
