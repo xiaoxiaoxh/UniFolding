@@ -1,0 +1,5 @@
+# Python Cache
+*.pyc
+
+# tmp files
+fast-api-client

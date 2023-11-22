@@ -1,0 +1,10 @@
+vyper-config>=1.1.1
+loguru>=0.7.0
+click>=8.1.3
+minio>=7.1.15
+pika>=1.3.2
+pymongo>=4.3.3
+fastapi>=0.97.0
+uvicorn>=0.22.0
+requests>=2.31.0
+openapi-python-client>=0.14.1
