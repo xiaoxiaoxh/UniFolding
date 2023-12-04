@@ -53,8 +53,6 @@ Please download the pre-trained models for long-sleeve Shirts and short-sleeve T
 The simulation environment depends on [RFUniverse](https://github.com/mvig-robotflow/rfuniverse). To set up the simulation environment, please refer to [Simulation Environment](RFUniverse/README.md).
 
 [CLOTH3D](https://github.com/hbertiche/CLOTH3D) dataset is used in our simulation. You can download it from [here](https://chalearnlap.cvc.uab.cat/dataset/38/description/).
-
-TODO: The code of the Unity project for self-supervised learning will be released in about one week!
 ### 📷🦾🗒 Real Environment
 
 #### 📷Camera
