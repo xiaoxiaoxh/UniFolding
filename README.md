@@ -3,7 +3,7 @@
 [![arXiv](https://img.shields.io/badge/arXiv-2311.01267-red.svg)](https://arxiv.org/abs/2311.01267) [![website](https://img.shields.io/website-up-down-green-red/http/cv.lbesson.qc.to.svg)](https://unifolding.robotflow.ai)
 
 
-This repo contains official code for the CoRL 2023 paper: [UniFolding: Towards Sample-efficient, Scalable, and Generalizable Robotic Garment Folding](https://unifolding.robotflow.ai/). *UniFolding* is a sample-efficient, scalable, and generalizable robotic system for unfolding and folding various garments.
+This repo contains official code for the CoRL 2023 paper: [UniFolding: Towards Sample-efficient, Scalable, and Generalizable Robotic Garment Folding](https://unifolding.robotflow.ai/). *UniFolding* is a sample-efficient, scalable, and generalizable robotic system for unfolding and folding various garments with large variations in shapes, textures and materials.
 
 - <img src="https://arxiv.org/favicon.ico" alt="paper icon" style="width:20px;height:20px;"/> Paper: [UniFolding: Towards Sample-efficient, Scalable, and Generalizable Robotic Garment Folding](https://arxiv.org/abs/2311.01267)
 - <img src="https://ssl.gstatic.com/atari/images/public/favicon.ico" alt="website icon" style="width:20px;height:20px;"/> Website: [https://unifolding.robotflow.ai](https://unifolding.robotflow.ai)
@@ -20,7 +20,7 @@ This section describes how to setup neccessary environments for this project.
 
 ### 🧠 Learning Environment
 
-The learning code should work on environments that meet the following requirements
+The learning code should work on environments that meet the following requirements:
 
 - Modern Linux Distributions that are not in EOL.
 - Python >= 3.8
@@ -54,6 +54,7 @@ The simulation environment depends on [RFUniverse](https://github.com/mvig-robot
 
 [CLOTH3D](https://github.com/hbertiche/CLOTH3D) dataset is used in our simulation. You can download it from [here](https://chalearnlap.cvc.uab.cat/dataset/38/description/).
 
+TODO: The code of the Unity project for self-supervised learning will be released in about one week!
 ### 📷🦾🗒 Real Environment
 
 #### 📷Camera
