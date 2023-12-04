@@ -1,0 +1,45 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!78 &1
+TagManager:
+  serializedVersion: 2
+  tags:
+  - robot
+  - ground
+  layers:
+  - Default
+  - TransparentFX
+  - Ignore Raycast
+  - Ground
+  - Water
+  - UI
+  - Axis
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - Layer0
+  - Layer1
+  - Layer2
+  - Layer3
+  - Layer4
+  - Temp
+  - Digit0
+  - Digit1
+  - Digit2
+  - Digit3
+  - Digit4
+  - Digit5
+  - Digit6
+  - Digit7
+  - Digit8
+  - Digit9
+  m_SortingLayers:
+  - name: Default
+    uniqueID: 0
+    locked: 0

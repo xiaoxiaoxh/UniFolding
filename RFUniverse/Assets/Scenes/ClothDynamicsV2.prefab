@@ -1,0 +1,99 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &4238063539078088356
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4238063539078088362}
+  - component: {fileID: 4238063539078088357}
+  m_Layer: 0
+  m_Name: ClothDynamicsV2
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4238063539078088362
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4238063539078088356}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4238063539078088357
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4238063539078088356}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 94b36796d056825499e89ba2314cd687, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _logo: {fileID: 2800000, guid: b9f9ac2a97c7c3c4e919d628707b7e29, type: 3}
+  _settingsView: 0
+  _globalSimParams:
+    numSubsteps: 8
+    numIterations: 8
+    maxNumNeighbors: 1024
+    maxSpeed: 50
+    gravity: {x: 0, y: -2, z: 0}
+    damping: 1
+    relaxationFactor: 1
+    longRangeStretchiness: 0
+    _wind: {fileID: 0}
+    _windIntensity: 0
+    sdfCollisionMargin: 0.01
+    friction: 1
+    enableSelfCollision: 1
+    interleavedHash: 3
+    _dampingMethod: 0
+    _dampingVel: 0.9
+    _clampVel: 1
+    particleDiameterScalar: 1
+    hashCellSizeScalar: 1
+    _normalOffsetScale: 1
+    _sdfList: []
+    particleDiameter: 0
+    numParticles: 0
+    deltaTime: 0
+  _solver:
+    _updateMode: 0
+    _runSim: 1
+    _useMouseGrabber: 1
+    _trisMode: 1
+    _localSpace: 0
+    _worldPositionImpact: 1
+    _worldRotationImpact: 1
+    _debugPoints: 0
+    _manualSetup: 0
+    _ignoreObjects: []
+    _unityColliders: []
+    _absColliders:
+    - {fileID: 0}
+    _collisionMeshes:
+      _meshObjects: []
+      _debugMeshPoints: 0
+      _debugVertexScale: 1
+    _dynamics: {fileID: 0}
+  _collisionMeshes:
+    _meshObjects: []
+    _debugMeshPoints: 0
+    _debugVertexScale: 1
+  _clothList: []
+  _debugEvents: 0
+  _extensions: []

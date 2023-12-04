@@ -1,0 +1,130 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: RFUniverseBuiltin
+  m_EditorClassIdentifier: 
+  m_GroupName: RFUniverseBuiltin
+  m_Data:
+    m_SerializedData: []
+  m_GUID: 3917bb6b18b007f4d9db6664a0977402
+  m_SerializeEntries:
+  - m_GUID: 359347105b5c4209cafc68088f8c9de2
+    m_Address: EmptyScene
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 221c56df534afbf03a8184415c1cd5d9
+    m_Address: Shader/CameraDepth
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 05235d4deee10a45f85f24017ccbbfd7
+    m_Address: Shader/CameraID
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f3d730565893bc926bb4c60b6ac909c5
+    m_Address: Shader/CameraMotionVector
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c22aac5221500bc9481bc2bc7beaf5b3
+    m_Address: Shader/CameraNormal
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 87d589455b99e1e4cb53491e07a52170
+    m_Address: Shader/PointCloud
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 1d675634340bba4fc96cd93faf69b50a
+    m_Address: Debug/ColliderBound
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e0d9f959c9a37a429b1740e64059df00
+    m_Address: Debug/PoseGizmo
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f5b4d487a9c647a4b898b51c711f13e0
+    m_Address: Debug/JointLink
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 2cf4b953525a80b0aa68c77ecc33c223
+    m_Address: Debug/CollisionLine
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c92e3693f4817639883d7856b08108f7
+    m_Address: Debug/GraspPoint
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b056e81f97971351187d17c1c2b1e61b
+    m_Address: Debug/ObjectID
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 728907c9120e4df4d8654ec05e5f839d
+    m_Address: Debug/2DBBox
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 3bf05c9bd73c7e64998d76dcfb660d66
+    m_Address: Debug/3DBBox
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 0fd5499b356f0cf448c3044eb82212e6
+    m_Address: Debug/BoundingBox
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 8400ac436ecbf9a49a8f5f393733cc5e
+    m_Address: CameraView
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 38dba93eb9a6fa94cbab7fc54a9a364e
+    m_Address: LightView
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 2919a13a875029d418e4822ec8db8a60
+    m_Address: UITookit/debug-window
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 702f1125219e9e546b590068eef68f7e
+    m_Address: UITookit/debug-item
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: def4d60e694fab449bafa0aafbed6dcf
+    m_Address: UITookit/articulation-window
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 690bdc03ab634f74fa5ee4a16d00eaf8
+    m_Address: UITookit/articulation-item
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: cb3ed8b08b021d1db93858f782af221a, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: 68689eaf7a898d54f95d2b96dccba251, type: 2}
+    - {fileID: 11400000, guid: b13d4e738cc4b34448dbdf7f21c4e6db, type: 2}
