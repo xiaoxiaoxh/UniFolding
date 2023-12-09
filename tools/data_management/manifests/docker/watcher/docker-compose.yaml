@@ -1,0 +1,17 @@
+# generate a docker-compose file that runs rabbitmq, mongodb, minio, with recommended settings. username should be "unifolding" and password should be "unifolding"
+version: '3.7'
+services:
+  watcher:
+    image: davidliyutong/unifolding-watcher:latest
+    restart: always
+    environment:
+      - UNIFOLDING_API_URL=http://backend:8080,
+      - UNIFOLDING_APP_WATCHPATH=/data
+      - UNIFOLDING_OSS_HOST=minio
+    volumes:
+      - ./data:/data
+
+networks:
+  default:
+    external: true
+    name: unifolding

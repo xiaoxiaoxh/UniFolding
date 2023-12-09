@@ -1,0 +1,58 @@
+# generate a docker-compose file that runs rabbitmq, mongodb, minio, with recommended settings. username should be "unifolding" and password should be "unifolding"
+version: '3.7'
+services:
+  mongodb:
+    image: mongo:6.0.6
+    hostname: mongodb
+    restart: always
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: unifolding
+      MONGO_INITDB_ROOT_PASSWORD: unifolding
+    volumes:
+      - ./data/mongodb:/data/db
+
+  minio:
+    image: minio/minio
+    hostname: minio
+    ports:
+     - 9000:9000 # api 端口
+     - 9001:9001 # 控制台端口
+    environment:
+      MINIO_ROOT_USER: unifolding #管理后台用户名
+      MINIO_ROOT_PASSWORD: unifolding #管理后台密码，最小8个字符
+    volumes:
+      - ./data/minio.data:/data #映射当前目录下的data目录至容器内/data目录
+      # - ./config:/root/.minio/ #映射配置目录
+    command: server --console-address ':9001' /data #指定容器中的目录 /data
+    privileged: true
+    restart: always
+
+  mongo-express:
+    image: mongo-express
+    hostname: mongo-express
+    restart: always
+    environment:
+      - ME_CONFIG_OPTIONS_EDITORTHEME=ambiance
+      - ME_CONFIG_MONGODB_URL=mongodb://unifolding:unifolding@mongodb:27017
+      - ME_CONFIG_MONGODB_ENABLE_ADMIN=true
+    ports:
+      - "8081:8081"
+
+  backend:
+    image: davidliyutong/unifolding-backend:latest
+    hostname: backend
+    restart: always
+    environment:
+      - PYTHONUNBUFFERED=1
+      - UNIFOLDING_DB_HOST=mongodb
+      - UNIFOLDING_APP_NUMREPLICAS=1
+      - UNIFOLDING_OSS_HOST=minio
+    ports:
+      - "8080:8080"
+
+networks:
+  default:
+    external: true
+    name: unifolding

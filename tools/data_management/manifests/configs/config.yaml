@@ -1,0 +1,56 @@
+backend:
+  app:
+    numReplicas: 1
+  api:
+    port: 8080
+    host: '0.0.0.0'
+  db:
+    host: mongodb.example.com
+    port: 27017
+    database: unifolding
+    username: unifolding
+    password: unifolding
+  mq:
+    host: rabbitmq.example.com
+    port: 5672
+    username: unifolding
+    password: unifolding
+    vhost: unifolding
+    queue: unifolding
+    exchange: unifolding
+    routingKey: unifolding
+  oss:
+    host: oss.example.com
+    port: 9000
+    tls: false
+    accessKey: unifolding
+    secretKey: unifolding
+    bucket: unifolding
+    endpoint: oss.example.com
+    path_style: true
+
+frontend:
+  api:
+    url: http://api.example.com:8080
+  oss:
+    host: oss.example.com
+    port: 9000
+    tls: false
+    accessKey: unifolding
+    secretKey: unifolding
+    bucket: unifolding
+    endpoint: oss.example.com
+    path_style: true
+
+watcher:
+  api:
+    url: http://api.example.com:8080
+  oss:
+    host: oss.example.com
+    port: 9000
+    tls: false
+    accessKey: unifolding
+    secretKey: unifolding
+    bucket: unifolding
+  app:
+    watchPath: /data
