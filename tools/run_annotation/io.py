@@ -23,6 +23,7 @@ from omegaconf import OmegaConf, DictConfig
 from common.datamodels import AnnotationConfig, AnnotationFlag
 from tools.data_management.src.common.datamodels import AnnotationPoint, LogPoint
 
+from functools import reduce
 
 class AnnotatorIO(ABC):
     def __init__(self, opt: AnnotationConfig):
@@ -337,9 +338,9 @@ class AnnotatorNetworkIO(AnnotatorIO):
         except Exception as e:
             return None, e
 
-    def get_rgb(self, entry_name: str) -> Tuple[Optional[np.ndarray], Optional[Exception]]:
+    def get_rgb(self, entry_name: str, img_name: str = "begin") -> Tuple[Optional[np.ndarray], Optional[Exception]]:
         url = f"{self.opt.api_url}/v1/proxy/{entry_name}"
-        rel_path = "rgb/begin.jpg"
+        rel_path = f"rgb/{img_name}.jpg"
         try:
             resp = self.session.get(url, params={'rel_path': rel_path})
             resp.raise_for_status()
@@ -366,6 +367,14 @@ class AnnotatorNetworkIO(AnnotatorIO):
             return config, None
         except Exception as e:
             return None, e
+        
+    def get_annotation(self, entry_name: str) -> Tuple[Optional[dict], Optional[Exception]]:
+        url = f"{self.opt.api_url}/v1/logs"
+        resp = self.session.get(url, json={'identifiers': [entry_name], 'extra_filter': None})
+        if resp.status_code != 200:
+            return {}, Exception(resp.json()['msg'])
+        else:
+            return resp.json()['logs'][0]['annotations'], None
 
     @classmethod
     def select_log_dir(cls, gui: Optional[bool] = None) -> Tuple[str, Optional[Exception]]:
@@ -373,7 +382,7 @@ class AnnotatorNetworkIO(AnnotatorIO):
         return res, None
 
     def scan_log_dir(self) -> Tuple[List[str], List[str], List[str], Optional[Exception]]:
-        extra_filter = {
+        unp_extra_filter = {
             '$and': [
                 self.opt.extra_filter if self.opt.extra_filter is not None else {},
                 {
@@ -389,16 +398,49 @@ class AnnotatorNetworkIO(AnnotatorIO):
                             }
                         }
                     ]
+                },
+                {
+                    "metadata.experiment_real": {
+                        "$exists": True
+                    }
                 }
             ]
         }
+        p_extra_filter = {
+            '$and': [
+                self.opt.extra_filter if self.opt.extra_filter is not None else {},
+                {
+                    '$and': [
+                        {
+                            '_processed': {
+                                '$exists': True
+                            }
+                        },
+                        {
+                            '_processed': {
+                                '$eq': 1
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+
         url = f"{self.opt.api_url}/v1/logs"
-        resp = self.session.post(url, json={'identifiers': None, 'extra_filter': extra_filter})
-        if resp.status_code == 200:
-            unprocessed_logs = [res['identifier'] for res in resp.json()['logs']]
-            return unprocessed_logs, [], [], None
+        unp_resp = self.session.post(url, json={'identifiers': None, 'extra_filter': unp_extra_filter})
+        p_resp = self.session.post(url, json={'identifiers': None, 'extra_filter': p_extra_filter})
+        if unp_resp.status_code == 200:
+            unprocessed_logs = [res['identifier'] for res in unp_resp.json()['logs']]
         else:
-            return [], [], [], Exception(resp.json()['msg'])
+            return [], [], [], Exception(unp_resp.json()['msg'])
+        if p_resp.status_code == 200:
+            # processed_logs = [zip(res['annotations'].keys(), [res['identifier']]* len(res['annotations'].keys()) ) \
+            #                         for res in p_resp.json()['logs']]
+            # processed_logs = reduce(lambda x, y: list(x) + list(y), processed_logs)
+            processed_logs = [(list(res['annotations'].keys())[0], res['identifier']) for res in p_resp.json()['logs']]
+        else:
+            return [], [], [], Exception(p_resp.json()['msg'])
+        return unprocessed_logs, processed_logs, [], None
 
     def set_log_processed_flag(self, entry_name: str, processed: AnnotationFlag) -> Optional[Exception]:
         url = f"{self.opt.api_url}/v1/processed/{entry_name}"

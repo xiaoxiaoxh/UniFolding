@@ -107,11 +107,13 @@ def random_verify(opt: AnnotationConfig, processed_log_entries: List[str]) -> Op
     ])
     __DISPLAY_NUM_VIRTUAL_POINTS__ = 2
 
+    exit_flag = False
     io_module = get_io_module(opt)
 
     import datetime
     all_timestamps: Dict[datetime.datetime, str] = {
-        datetime.datetime.strptime('-'.join(x.split('-')[:-1]), "%Y-%m-%dT%H-%M-%S"): x for x in processed_log_entries
+        datetime.datetime.fromtimestamp(int(x[0].split('.')[1]) / 1000) \
+            : x[1] for x in processed_log_entries
     }
     all_dates = set(list(map(lambda x: x.strftime('%Y-%m-%d'), all_timestamps.keys())))
     date_timestamp_map = {
@@ -124,55 +126,87 @@ def random_verify(opt: AnnotationConfig, processed_log_entries: List[str]) -> Op
     index = np.random.permutation(np.arange(0, len(selected_log_entries)))
 
     console = Console()
-    for idx in index:
-        entry = selected_log_entries[idx]
+    for entry in selected_log_entries:
+        if io_module.acquire_annotation_lock(entry) is not None:
+            logger.warning("failed to acquire lock, skipping")
+            continue
+
+        res, err = io_module.get_log_processed_flag(entry)
+        if res != AnnotationFlag.COMPLETED.value:
+            logger.info(f"not yet annotated ({res}), skipping")
+            io_module.release_annotation_lock(entry)
+            continue
+
         logger.info(f'exam {entry}')
         ctx = AnnotationContext(io_module)
-        ctx, err = do_init_annotation(opt, entry, ctx)
-        if err is not None:
-            logger.error(err)
-
         try:
-            annotation = AnnotationResult()
-            annotation.from_dict(dict(ctx.raw_log[opt.raw_log_namespace].annotation))
-        except Exception:
-            logger.error('failed to get annotation')
-            continue
-        candidates = np.array(ctx.raw_log[opt.raw_log_namespace].pose_virtual.prediction.begin)
-        console.print("动作类型（action_type）是:", annotation.action_type, style="blue")
-        visualize_point_cloud_list_with_points([ctx.curr_pcd], np.array(annotation.action_poses)[:, :3])
+            ctx, err = do_init_annotation(opt, entry, ctx)
+            if err is not None:
+                logger.error(f'error: {err}')
+                if err.args[0] == KeyboardInterrupt:
+                        exit_flag = True
+            
+            annotation_dicts, err = io_module.get_annotation(entry)
+            if err is not None:
+                logger.error(f'error: {err}')
+        
+        except KeyboardInterrupt:
+            io_module.release_annotation_lock(entry)
+            return Exception(KeyboardInterrupt)
+       
+        except Exception as e:
+            logger.exception(e)
 
-        if annotation.action_type == ActionTypeDef.FLING:
-            for i in range(opt.K):
-                console.print(f"排行榜（grasp_point_rankings）[{i}]:", __DISPLAY_OPTIONS__[__DISPLAY_OPTIONS_MAPPING_INV__[annotation.grasp_point_rankings[i]]], style="blue")
-                point_indexes = annotation.selected_grasp_point_indices[i]
-                left_op, right_op = point_indexes[:2], point_indexes[2:]
-                left_points_np, right_points_np = candidates[left_op], candidates[right_op]
+        finally:
+            io_module.release_annotation_lock(entry)
 
-                # Generate copy of point cloud
-                left_pcd, right_pcd = copy.deepcopy(ctx.curr_pcd), copy.deepcopy(ctx.curr_pcd)
+        if exit_flag:
+            return Exception(KeyboardInterrupt)
 
-                # Move the point cloud for a distance
+        for annotator, annotation_dict in annotation_dicts.items():
+            logger.info(f'check annotation of {annotator.split(".")[0]}')
+            try:
+                annotation = AnnotationResult()
+                annotation.from_dict(annotation_dict)
+            except Exception:
+                logger.error('failed to get annotation')
+                continue
+
+            candidates = np.array(ctx.raw_log[opt.raw_log_namespace].pose_virtual.prediction.begin)
+            console.print("动作类型（action_type）是:", annotation.action_type, style="blue")
+            visualize_point_cloud_list_with_points([ctx.curr_pcd], np.array(annotation.action_poses)[:, :3])
+
+            if annotation.action_type == ActionTypeDef.FLING:
+                for i in range(opt.K):
+                    console.print(f"排行榜（grasp_point_rankings）[{i}]:", __DISPLAY_OPTIONS__[__DISPLAY_OPTIONS_MAPPING_INV__[annotation.grasp_point_rankings[i]]], style="blue")
+                    point_indexes = annotation.selected_grasp_point_indices[i]
+                    left_op, right_op = point_indexes[:2], point_indexes[2:]
+                    left_points_np, right_points_np = candidates[left_op], candidates[right_op]
+
+                    # Generate copy of point cloud
+                    left_pcd, right_pcd = copy.deepcopy(ctx.curr_pcd), copy.deepcopy(ctx.curr_pcd)
+
+                    # Move the point cloud for a distance
+                    right_pcd = right_pcd.translate(__DISPLAY_POINTCLOUD_OFFSET__)
+                    right_points_np[:, :3] += __DISPLAY_POINTCLOUD_OFFSET__
+
+                    all_points = np.vstack([left_points_np[..., :3], right_points_np[..., :3]])
+                    visualize_point_cloud_list_with_points([left_pcd, right_pcd], points=all_points)
+
+                # visualize the all grasp points and annotated grasp points, print yes or no
+                console.print("是否比所有都好（fling_gt_is_better_than_rest）:", annotation.fling_gt_is_better_than_rest, style="blue")
+                left_pcd, right_pcd, right_candidates = copy.deepcopy(ctx.curr_pcd), copy.deepcopy(ctx.curr_pcd), copy.deepcopy(candidates)
                 right_pcd = right_pcd.translate(__DISPLAY_POINTCLOUD_OFFSET__)
-                right_points_np[:, :3] += __DISPLAY_POINTCLOUD_OFFSET__
+                right_candidates[:, :3] += __DISPLAY_POINTCLOUD_OFFSET__
+                right_candidates = right_candidates[:-__DISPLAY_NUM_VIRTUAL_POINTS__]
 
-                all_points = np.vstack([left_points_np[..., :3], right_points_np[..., :3]])
-                visualize_point_cloud_list_with_points([left_pcd, right_pcd], points=all_points)
-
-            # visualize the all grasp points and annotated grasp points, print yes or no
-            console.print("是否比所有都好（fling_gt_is_better_than_rest）:", annotation.fling_gt_is_better_than_rest, style="blue")
-            left_pcd, right_pcd, right_candidates = copy.deepcopy(ctx.curr_pcd), copy.deepcopy(ctx.curr_pcd), copy.deepcopy(candidates)
-            right_pcd = right_pcd.translate(__DISPLAY_POINTCLOUD_OFFSET__)
-            right_candidates[:, :3] += __DISPLAY_POINTCLOUD_OFFSET__
-            right_candidates = right_candidates[:-__DISPLAY_NUM_VIRTUAL_POINTS__]
-
-            visualize_point_cloud_list_with_points(
-                [left_pcd, right_pcd],
-                np.concatenate(
-                    [np.array(annotation.action_poses)[:, :3], right_candidates[:, :3]]
-                ),
-                point_colors=[0] * 4 + [1 + i for i in range(len(right_candidates))]
-            )
+                visualize_point_cloud_list_with_points(
+                    [left_pcd, right_pcd],
+                    np.concatenate(
+                        [np.array(annotation.action_poses)[:, :3], right_candidates[:, :3]]
+                    ),
+                    point_colors=[0] * 4 + [1 + i for i in range(len(right_candidates))]
+                )
 
     return None
 
