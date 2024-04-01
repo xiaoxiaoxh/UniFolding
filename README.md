@@ -38,7 +38,7 @@ To setup the learning environment, you need to download and install CUDA from [h
 
 
 ```bash
-bash scripts/shell/setup-env.sh
+bash setup-env.sh
 ```
 
 This script will automatically create an conda environment named `unifolding` and install dependent packages in it. You can modify this script to make it behaves differently.
