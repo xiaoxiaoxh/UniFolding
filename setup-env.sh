@@ -39,12 +39,5 @@ pip install torch_scatter torch_sparse torch_cluster torch_spline_conv -f https:
 # wget https://data.pyg.org/whl/torch-1.10.0%2Bcu113/torch_sparse-0.6.13-cp38-cp38-linux_x86_64.whl && pip install torch_sparse-0.6.13-cp38-cp38-linux_x86_64.whl
 # wget https://data.pyg.org/whl/torch-1.10.0%2Bcu113/torch_spline_conv-1.2.1-cp38-cp38-linux_x86_64.whl && pip install torch_spline_conv-1.2.1-cp38-cp38-linux_x86_64.whl
 
-# Stage 7: rfmove
-cd third_party/rfmove
-mkdir -p build && cd build
-cmake INTALL_TO_SYSTEM=OFF ..
-make -j4
-make install
-
-# Stage 8: Fix libffi
+# Stage 7: Fix libffi
 conda install libffi=3.3
