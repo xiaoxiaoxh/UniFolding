@@ -1,7 +1,7 @@
 # Cloth Simulation Environment
 
 This is the cloth simulation environment used in [UniFolding](https://github.com/xiaoxiaoxh/UniFolding).
-It is built on [RFUniverse](https://github.com/mvig-robotflow/rfuniverse) which is a a platform developed in Unity for robot simulation and reinforcement learning.
+It is built on [RFUniverse](https://github.com/robotflow-initiative/rfuniverse) which is a a platform developed in Unity for robot simulation and reinforcement learning.
 The GPU-based cloth simulator in this project is based on [Cloth Dynamics](https://assetstore.unity.com/packages/tools/physics/cloth-dynamics-194408) plugin in Unity Asset Store.
 
 
@@ -69,8 +69,8 @@ Follow the normal process to build an executable program. You can follow the off
 
 [Unity - Manual: Publishing Builds](https://docs.unity3d.com/Manual/PublishingBuilds.html)
 
-This executable program supports two-way messaging with the python interface ([pyrfuniverse](https://github.com/mvig-robotflow/pyrfuniverse)). 
+This executable program supports two-way messaging with the python interface ([pyrfuniverse]([https://github.com/mvig-robotflow/pyrfuniverse](https://github.com/robotflow-initiative/pyrfuniverse))). 
 
 ## Customization
 Currently, we have implemented some basic primitives (e.g. `fling`) in `Main.cs`. If you want to implement your own action primitives, please refer
-to the documentation of [`dynamic message`](https://mvig-robotflow.github.io/pyrfuniverse/markdown/advanced_usages.html#dynamic-message).
+to the documentation of [`dynamic message`](https://docs.robotflow.ai/pyrfuniverse/examples/tutorial-test_custom_message.html).
