@@ -69,7 +69,7 @@ Follow the normal process to build an executable program. You can follow the off
 
 [Unity - Manual: Publishing Builds](https://docs.unity3d.com/Manual/PublishingBuilds.html)
 
-This executable program supports two-way messaging with the python interface ([pyrfuniverse]([https://github.com/mvig-robotflow/pyrfuniverse](https://github.com/robotflow-initiative/pyrfuniverse))). 
+This executable program supports two-way messaging with the python interface ([pyrfuniverse](https://github.com/robotflow-initiative/pyrfuniverse)). 
 
 ## Customization
 Currently, we have implemented some basic primitives (e.g. `fling`) in `Main.cs`. If you want to implement your own action primitives, please refer
