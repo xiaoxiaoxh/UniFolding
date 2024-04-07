@@ -15,7 +15,3 @@
 *.sln
 
 ProjectSettings/ProjectVersion.txt
-
-Assets/ClothDynamics/
-!Assets/ClothDynamics/Scripts/V2/ClothObjectGPU.cs
-!Assets/ClothDynamics/Scripts/V2/GPUClothDynamicsV2.cs
