@@ -157,8 +157,10 @@ If you find this project helpful for your research, please consider citing the f
 ```BibTex
 @inproceedings{xue2023unifolding,
   title={UniFolding: Towards Sample-efficient, Scalable, and Generalizable Robotic Garment Folding},
-  author={Xue, Han and Li, Yutong and Xu, Wenqiang and Zheng, Dongzhe and Lu, Cewu},
-  booktitle={7th Annual Conference on Robot Learning},
-  year={2023}
+  author={Xue, Han and Li, Yutong and Xu, Wenqiang and Li, Huanyu and Zheng, Dongzhe and Lu, Cewu},
+  booktitle={Conference on Robot Learning},
+  pages={3321--3341},
+  year={2023},
+  organization={PMLR}
 }
 ```
